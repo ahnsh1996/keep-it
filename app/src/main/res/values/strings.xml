@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Keep It!</string>
+
+    <!-- Detail -->
+    <string name="label_body_text">본문</string>
+    <string name="label_view_collection">모아보기</string>
+    <string name="label_web_url">WEB URL</string>
+    <string name="label_phone">PHONE</string>
+    <string name="label_email">EMAIL</string>
+
+    <!-- Menu -->
+    <string name="title_delete_menu">삭제</string>
+    <string name="title_search_menu">검색</string>
+    <string name="title_edit_menu">편집</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.ahnsh1996.keepit.ui.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_keep_data_detail"
+            app:destination="@id/navigation_keep_data_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_keep_data_detail"
+        android:name="com.ahnsh1996.keepit.ui.detail.KeepDataDetailFragment"
+        android:label="KeepDataDetailFragment"
+        tools:layout="@layout/fragment_keep_data_detail" >
+        <argument
+            android:name="keepData"
+            app:argType="com.ahnsh1996.keepit.model.KeepData" />
+    </fragment>
+</navigation>
