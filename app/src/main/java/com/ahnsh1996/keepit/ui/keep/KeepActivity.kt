@@ -1,4 +1,4 @@
-package com.ahnsh1996.keepit.ui
+package com.ahnsh1996.keepit.ui.keep
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,12 +18,12 @@ class KeepActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_keep)
 
-        val textViewSelectText = findViewById<TextView>(R.id.textview_select_text)
-        val selectText = intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT) ?: ""
+        val textViewSelectedText = findViewById<TextView>(R.id.textview_selected_text)
+        val selectedText = intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT) ?: ""
 
-        if (selectText.isNotBlank()) {
-            Toast.makeText(this, "Keep it! : ${selectText}", Toast.LENGTH_LONG).show()
-            viewModel.addKeepData(selectText, textViewSelectText) { finish() }
+        if (selectedText.isNotBlank()) {
+            Toast.makeText(this, "Keep it! : ${selectedText}", Toast.LENGTH_LONG).show()
+            viewModel.addKeepData(null, selectedText, textViewSelectedText) { finish() }
         }
     }
 }

@@ -12,19 +12,23 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_home_to_keep_data_detail"
-            app:destination="@id/navigation_keep_data_detail"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/navigation_keep_data_detail" />
+        <action
+            android:id="@+id/action_home_to_add_note"
+            app:destination="@id/addNoteFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_keep_data_detail"
         android:name="com.ahnsh1996.keepit.ui.detail.KeepDataDetailFragment"
         android:label="KeepDataDetailFragment"
-        tools:layout="@layout/fragment_keep_data_detail" >
+        tools:layout="@layout/fragment_keep_data_detail">
         <argument
             android:name="keepData"
             app:argType="com.ahnsh1996.keepit.model.KeepData" />
     </fragment>
+    <fragment
+        android:id="@+id/addNoteFragment"
+        android:name="com.ahnsh1996.keepit.ui.keep.AddNoteFragment"
+        android:label="AddNoteFragment"
+        tools:layout="@layout/fragment_add_note" />
 </navigation>

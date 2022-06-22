@@ -39,9 +39,12 @@ class HomeFragment : Fragment() {
         setSwipeListener()
         setListAdapter()
 
+        binding.buttonAddNote.setOnClickListener {
+            findNavController().navigate(R.id.action_home_to_add_note)
+        }
+
         viewModel.keepDataList.observe(viewLifecycleOwner) { keepDataList ->
             (binding.recyclerviewKeepdataList.adapter as HomeDataListAdapter).submitList(keepDataList)
-            binding.recyclerviewKeepdataList.smoothScrollToPosition(0)
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
@@ -145,11 +148,6 @@ class HomeFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                     viewModel.deleteKeepData(viewModel.selectedList)
-                    Toast.makeText(
-                        requireContext(),
-                        viewModel.keepDataList.value?.size.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
                     mode.finish()
                     true
                 }

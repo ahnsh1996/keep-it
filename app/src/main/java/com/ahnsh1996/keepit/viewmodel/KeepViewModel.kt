@@ -3,17 +3,20 @@ package com.ahnsh1996.keepit.viewmodel
 import android.widget.TextView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahnsh1996.keepit.repository.KeepDataRepository
 import com.ahnsh1996.keepit.model.KeepData
+import com.ahnsh1996.keepit.repository.KeepDataRepository
 import kotlinx.coroutines.launch
 
 class KeepViewModel(private val keepDataRepository: KeepDataRepository) : ViewModel() {
 
-    fun addKeepData(selectText: String, textView: TextView, finish: () -> Unit) {
+    fun addKeepData(title: String?, content: String, textView: TextView, finish: () -> Unit) {
         viewModelScope.launch {
-            val title = "Note ${keepDataRepository.getKeepDataCount() + 1}"
-            val keepData = KeepData(title = title, data = selectText)
-            textView.text = selectText
+            var titleToAdd = title
+            if (titleToAdd.isNullOrBlank()) {
+                titleToAdd = "Note ${keepDataRepository.getKeepDataCount() + 1}"
+            }
+            val keepData = KeepData(title = titleToAdd, data = content)
+            textView.text = content
 
             textView.urls.forEach { urlSpan ->
                 if (urlSpan.url.startsWith("tel:")) {
