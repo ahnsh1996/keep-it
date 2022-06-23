@@ -147,8 +147,7 @@ class HomeFragment : Fragment() {
                         viewModel.selectedList.size.toString() + "개 항목 삭제됨.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    viewModel.deleteKeepData(viewModel.selectedList)
-                    mode.finish()
+                    viewModel.deleteKeepData(viewModel.selectedList) { mode.finish() }
                     true
                 }
                 else -> false

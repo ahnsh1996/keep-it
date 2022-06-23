@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahnsh1996.keepit.repository.KeepDataRepository
 import com.ahnsh1996.keepit.model.KeepData
+import com.ahnsh1996.keepit.repository.KeepDataRepository
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -28,10 +28,11 @@ class HomeViewModel(private val keepDataRepository: KeepDataRepository) : ViewMo
         }
     }
 
-    fun deleteKeepData(idList: List<UUID>) {
+    fun deleteKeepData(idList: List<UUID>, callback: () -> Unit) {
         viewModelScope.launch {
             keepDataRepository.deleteKeepData(idList)
             loadKeepData()
+            callback()
         }
     }
 
