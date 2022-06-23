@@ -24,6 +24,11 @@ URL 예시 : https://github.com/, https://github.com/ahnsh1996/keep-it
 ※ 이메일과 전화번호 예시는 대부분 임의의 테스트용 메일 및 번호입니다.
 ```
 
+|웹서핑 중 빠른 저장|Keep it 앱|
+|-|-|
+|<img width="400" alt="keep it 메모 저장" src="https://user-images.githubusercontent.com/77680436/175304574-c4e5c244-7304-47d7-9950-7979e67a0a11.gif">|<img width="400" alt="keep it 메모 확인" src="https://user-images.githubusercontent.com/77680436/175304564-0debb557-1b7b-4863-b137-f4f7aca3ed4e.gif">|
+
+
 ## 기술 스택	
 <table>
   <tr>
