@@ -8,15 +8,15 @@ class KeepDataRepository(private val keepDataLocalDataSource: KeepDataLocalDataS
         keepDataLocalDataSource.addKeepData(keepData)
     }
 
-    suspend fun getKeepData(): List<KeepData> = keepDataLocalDataSource.getKeepData()
-
     suspend fun deleteKeepData(idList: List<UUID>) {
         keepDataLocalDataSource.deleteKeepData(idList)
     }
 
-    suspend fun searchKeepData(keyword: String): List<KeepData> = keepDataLocalDataSource.searchKeepData(keyword)
-
     suspend fun getKeepDataCount() = keepDataLocalDataSource.getKeepDataCount()
+
+    suspend fun getAllKeepData() = keepDataLocalDataSource.getAllKeepData()
+
+    suspend fun searchKeepData(keyword: String) = keepDataLocalDataSource.searchKeepData(keyword)
 
     companion object {
         private var instance: KeepDataRepository? = null

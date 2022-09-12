@@ -1,44 +1,39 @@
 package com.ahnsh1996.keepit.viewmodel
 
 import android.view.ActionMode
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahnsh1996.keepit.model.KeepData
 import com.ahnsh1996.keepit.repository.KeepDataRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeViewModel(private val keepDataRepository: KeepDataRepository) : ViewModel() {
 
-    private val _keepDataList = MutableLiveData<List<KeepData>>()
-    val keepDataList: LiveData<List<KeepData>> get() = _keepDataList
+    private val searchKeyword: MutableStateFlow<String> = MutableStateFlow("")
+
+    val keepData = searchKeyword.flatMapLatest { keyword ->
+        if (keyword.isBlank()) {
+            keepDataRepository.getAllKeepData()
+        } else {
+            keepDataRepository.searchKeepData(keyword)
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     val selectedList = mutableListOf<UUID>()
     var editActionMode: ActionMode? = null
 
-    init {
-        loadKeepData()
-    }
-
-    fun loadKeepData() {
-        viewModelScope.launch {
-            _keepDataList.value = keepDataRepository.getKeepData()
-        }
-    }
-
     fun deleteKeepData(idList: List<UUID>, callback: () -> Unit) {
         viewModelScope.launch {
             keepDataRepository.deleteKeepData(idList)
-            loadKeepData()
             callback()
         }
     }
 
     fun searchKeepData(keyword: String) {
-        viewModelScope.launch {
-            _keepDataList.value = keepDataRepository.searchKeepData(keyword)
-        }
+        searchKeyword.value = keyword
     }
 }

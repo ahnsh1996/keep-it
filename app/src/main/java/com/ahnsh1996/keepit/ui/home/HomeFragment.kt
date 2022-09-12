@@ -7,8 +7,12 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahnsh1996.keepit.R
@@ -17,6 +21,8 @@ import com.ahnsh1996.keepit.model.KeepData
 import com.ahnsh1996.keepit.ui.common.ViewModelFactory
 import com.ahnsh1996.keepit.viewmodel.HomeDataViewModel
 import com.ahnsh1996.keepit.viewmodel.HomeViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -28,7 +34,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -36,16 +41,21 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setSwipeListener()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.keepData.collectLatest { keepDataList ->
+                    (binding.recyclerviewKeepdataList.adapter as HomeDataListAdapter).submitList(
+                        keepDataList
+                    )
+                }
+            }
+        }
+
+        setMenuProvider()
         setListAdapter()
 
         binding.buttonAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_add_note)
-        }
-
-        viewModel.keepDataList.observe(viewLifecycleOwner) { keepDataList ->
-            (binding.recyclerviewKeepdataList.adapter as HomeDataListAdapter).submitList(keepDataList)
-            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         if (viewModel.editActionMode != null) {
@@ -53,40 +63,38 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.home_context_menu, menu)
+    private fun setMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.home_context_menu, menu)
 
-        val searchItem = menu.findItem(R.id.menu_search)
-        val searchView = searchItem.actionView as SearchView
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                val searchItem = menu.findItem(R.id.menu_search)
+                val searchView = searchItem.actionView as SearchView
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        newText?.let {
+                            viewModel.searchKeepData(newText.trim())
+                        }
+                        return false
+                    }
+                })
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    viewModel.searchKeepData(newText.trim())
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_edit -> {
+                        viewModel.editActionMode = activity?.startActionMode(ActionModeCallback())
+                        true
+                    }
+                    else -> false
                 }
-                return false
             }
-        })
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_edit -> {
-                viewModel.editActionMode = activity?.startActionMode(ActionModeCallback())
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun setSwipeListener() {
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadKeepData()
-        }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setListAdapter() {
@@ -117,7 +125,8 @@ class HomeFragment : Fragment() {
                 }
 
                 override fun onCopyClick(data: String) {
-                    val clipboard = activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                    val clipboard =
+                        activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                     val clip: ClipData = ClipData.newPlainText("data", data)
                     clipboard.setPrimaryClip(clip)
                     Toast.makeText(requireContext(), "복사되었습니다.", Toast.LENGTH_SHORT).show()

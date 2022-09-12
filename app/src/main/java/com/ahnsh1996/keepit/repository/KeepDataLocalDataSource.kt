@@ -18,24 +18,18 @@ class KeepDataLocalDataSource(
         }
     }
 
-    override suspend fun getKeepData(): List<KeepData> =
-        withContext(ioDispatcher) {
-            keepDataDao.getAllDataList()
-        }
-
     override suspend fun deleteKeepData(idList: List<UUID>) {
         withContext(ioDispatcher) {
             keepDataDao.deleteData(idList)
         }
     }
 
-    override suspend fun searchKeepData(keyword: String): List<KeepData> =
-        withContext(ioDispatcher) {
-            keepDataDao.searchData(keyword)
-        }
-
     override suspend fun getKeepDataCount(): Int =
         withContext(ioDispatcher) {
             keepDataDao.getDataCount()
         }
+
+    override suspend fun getAllKeepData() = keepDataDao.getAllData()
+
+    override suspend fun searchKeepData(keyword: String) = keepDataDao.searchData(keyword)
 }
