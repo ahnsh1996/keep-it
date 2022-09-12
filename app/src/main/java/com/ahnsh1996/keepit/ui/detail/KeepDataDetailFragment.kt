@@ -47,9 +47,6 @@ class KeepDataDetailFragment : Fragment() {
         setWebUrlListAdapter()
         setPhoneListAdapter()
         setEmailListAdapter()
-
-        println(viewModel.keepData.emailList)
-        println(viewModel.isEmailListEmpty)
     }
 
     private fun setTabLayoutListener() {
