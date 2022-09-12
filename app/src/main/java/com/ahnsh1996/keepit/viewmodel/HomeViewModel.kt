@@ -3,6 +3,8 @@ package com.ahnsh1996.keepit.viewmodel
 import android.view.ActionMode
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.ahnsh1996.keepit.repository.KeepDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +23,8 @@ class HomeViewModel(private val keepDataRepository: KeepDataRepository) : ViewMo
         } else {
             keepDataRepository.searchKeepData(keyword)
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+    }.cachedIn(viewModelScope)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PagingData.empty())
 
     val selectedList = mutableListOf<UUID>()
     var editActionMode: ActionMode? = null

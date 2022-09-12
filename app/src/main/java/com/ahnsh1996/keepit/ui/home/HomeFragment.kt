@@ -43,16 +43,16 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.keepData.collectLatest { keepDataList ->
-                    (binding.recyclerviewKeepdataList.adapter as HomeDataListAdapter).submitList(
-                        keepDataList
+                viewModel.keepData.collectLatest { pagedKeepData ->
+                    (binding.recyclerviewKeepdataList.adapter as HomeDataPagingAdapter).submitData(
+                        pagedKeepData
                     )
                 }
             }
         }
 
         setMenuProvider()
-        setListAdapter()
+        setPagingAdapter()
 
         binding.buttonAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_add_note)
@@ -97,8 +97,8 @@ class HomeFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun setListAdapter() {
-        val adapter = HomeDataListAdapter(
+    private fun setPagingAdapter() {
+        val adapter = HomeDataPagingAdapter(
             viewModel.selectedList,
             object : HomeDataViewModel.OnItemClickEventListener {
                 override fun onClick(keepData: KeepData, homeDataViewModel: HomeDataViewModel) {

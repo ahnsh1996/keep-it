@@ -29,7 +29,7 @@ class KeepDataLocalDataSource(
             keepDataDao.getDataCount()
         }
 
-    override suspend fun getAllKeepData() = keepDataDao.getAllData()
+    override fun getAllKeepData() = keepDataDao.getAllData()
 
-    override suspend fun searchKeepData(keyword: String) = keepDataDao.searchData(keyword)
+    override fun searchKeepData(keyword: String) = keepDataDao.searchData(keyword)
 }

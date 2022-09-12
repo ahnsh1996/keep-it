@@ -1,7 +1,7 @@
 package com.ahnsh1996.keepit.repository
 
+import androidx.paging.PagingSource
 import com.ahnsh1996.keepit.model.KeepData
-import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 interface KeepDataSource {
@@ -12,7 +12,7 @@ interface KeepDataSource {
 
     suspend fun getKeepDataCount(): Int
 
-    suspend fun getAllKeepData(): Flow<List<KeepData>>
+    fun getAllKeepData(): PagingSource<Int, KeepData>
 
-    suspend fun searchKeepData(keyword: String): Flow<List<KeepData>>
+    fun searchKeepData(keyword: String): PagingSource<Int, KeepData>
 }

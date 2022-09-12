@@ -1,6 +1,11 @@
 package com.ahnsh1996.keepit.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.ahnsh1996.keepit.common.PAGING_SIZE
 import com.ahnsh1996.keepit.model.KeepData
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 class KeepDataRepository(private val keepDataLocalDataSource: KeepDataLocalDataSource) {
@@ -14,9 +19,29 @@ class KeepDataRepository(private val keepDataLocalDataSource: KeepDataLocalDataS
 
     suspend fun getKeepDataCount() = keepDataLocalDataSource.getKeepDataCount()
 
-    suspend fun getAllKeepData() = keepDataLocalDataSource.getAllKeepData()
+    fun getAllKeepData(): Flow<PagingData<KeepData>> {
+        val pagingSourceFactory = { keepDataLocalDataSource.getAllKeepData() }
 
-    suspend fun searchKeepData(keyword: String) = keepDataLocalDataSource.searchKeepData(keyword)
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGING_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
+    }
+
+    fun searchKeepData(keyword: String): Flow<PagingData<KeepData>> {
+        val pagingSourceFactory = { keepDataLocalDataSource.searchKeepData(keyword) }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGING_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
+    }
 
     companion object {
         private var instance: KeepDataRepository? = null

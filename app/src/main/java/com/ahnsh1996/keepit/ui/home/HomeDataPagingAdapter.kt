@@ -2,30 +2,32 @@ package com.ahnsh1996.keepit.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.ahnsh1996.keepit.ui.common.KeepDataDiffCallback
 import com.ahnsh1996.keepit.databinding.ItemHomeDataBinding
 import com.ahnsh1996.keepit.model.KeepData
+import com.ahnsh1996.keepit.ui.common.KeepDataDiffCallback
 import com.ahnsh1996.keepit.viewmodel.HomeDataViewModel
 import java.util.*
 
-class HomeDataListAdapter(
+class HomeDataPagingAdapter(
     private val selectedList: List<UUID>,
     private val clickListener: HomeDataViewModel.OnItemClickEventListener
-) : ListAdapter<KeepData, HomeDataListAdapter.HomeDataListViewHolder>(KeepDataDiffCallback()) {
+) : PagingDataAdapter<KeepData, HomeDataPagingAdapter.HomeDataViewHolder>(KeepDataDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeDataListViewHolder {
+    override fun onBindViewHolder(holder: HomeDataViewHolder, position: Int) {
+        getItem(position)?.let { pagedData ->
+            holder.bind(pagedData)
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeDataViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemHomeDataBinding.inflate(inflater, parent, false)
-        return HomeDataListViewHolder(binding)
+        return HomeDataViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: HomeDataListViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
-
-    inner class HomeDataListViewHolder(private val binding: ItemHomeDataBinding) :
+    inner class HomeDataViewHolder(private val binding: ItemHomeDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(keepData: KeepData) {
