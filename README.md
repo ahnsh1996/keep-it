@@ -41,11 +41,11 @@ URL 예시 : https://github.com/, https://github.com/ahnsh1996/keep-it
   </tr>
   <tr>
     <td><b>Jetpack Components</b></td>
-    <td>DataBinding, LiveData, ViewModel, Navigation, Room</td>
+    <td>DataBinding, LiveData, ViewModel, Navigation, Room, Paging</td>
   </tr>
   <tr>
     <td><b>Concurrency</b></td>
-    <td>Coroutines</td>
+    <td>Coroutines + Flow</td>
   </tr>
   <tr>
     <td><b>Other Library</b></td>
